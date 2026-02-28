@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEP8 Speaking Test — Marker</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2744;
+    --blue: #2e4a8b;
+    --sky: #4a7cc9;
+    --gold: #c9943a;
+    --gold-light: #f0c97a;
+    --cream: #f7f3ed;
+    --white: #ffffff;
+    --grey-1: #f2f0ec;
+    --grey-2: #e0dbd2;
+    --grey-3: #9b9488;
+    --text: #1a1a1a;
+    --shadow: 0 4px 24px rgba(26,39,68,0.12);
+    --shadow-lg: 0 12px 48px rgba(26,39,68,0.18);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy);
+    padding: 28px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .logo-badge {
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'DM Serif Display', serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  .logo-title {
+    color: var(--white);
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-ghost {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.8);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+  .btn-gold {
+    background: var(--gold);
+    color: var(--navy);
+  }
+  .btn-gold:hover { background: var(--gold-light); }
+
+  /* ── MAIN LAYOUT ── */
+  .app-body {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: calc(100vh - 73px);
+  }
+
+  /* ── SIDEBAR ── */
+  sidebar, .sidebar {
+    background: #111c36;
+    padding: 32px 20px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .sidebar-label {
+    color: var(--grey-3);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0 12px;
+    margin-bottom: 12px;
+  }
+
+  .topic-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 14px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
+    margin-bottom: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255,255,255,0.55);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+  }
+  .topic-btn:hover { background: rgba(255,255,255,0.06); color: #fff; }
+  .topic-btn.active { background: rgba(74,124,201,0.2); color: #fff; }
+  .topic-btn.active .topic-num { background: var(--sky); color: #fff; }
+
+  .topic-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .topic-name { line-height: 1.3; }
+
+  .sidebar-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 24px 0;
+  }
+
+  .student-section { padding: 0 12px; }
+
+  .student-label {
+    color: var(--grey-3);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .student-input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .student-input::placeholder { color: rgba(255,255,255,0.3); }
+  .student-input:focus { border-color: var(--sky); }
+
+  /* ── CONTENT PANEL ── */
+  .content {
+    background: var(--cream);
+    overflow-y: auto;
+  }
+
+  .topic-panel { display: none; padding: 48px 52px; }
+  .topic-panel.active { display: block; }
+
+  /* ── TOPIC HEADER ── */
+  .topic-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding-bottom: 28px;
+    border-bottom: 2px solid var(--grey-2);
+  }
+
+  .topic-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sky);
+    margin-bottom: 8px;
+  }
+
+  .topic-heading {
+    font-family: 'DM Serif Display', serif;
+    font-size: 34px;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .date-input-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+
+  .date-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--grey-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .date-input {
+    background: #fff;
+    border: 1px solid var(--grey-2);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--navy);
+    outline: none;
+    width: 160px;
+  }
+  .date-input:focus { border-color: var(--sky); }
+
+  /* ── SECTION BLOCKS ── */
+  .section-block {
+    margin-bottom: 36px;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .section-block-header {
+    background: var(--navy);
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .part-badge {
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 3px 9px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  .section-block-title {
+    color: #fff;
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+  }
+
+  .section-block-body {
+    padding: 24px 28px;
+  }
+
+  .instruction {
+    font-size: 13px;
+    color: var(--grey-3);
+    font-style: italic;
+    margin-bottom: 18px;
+    padding: 10px 14px;
+    background: var(--grey-1);
+    border-radius: 8px;
+    border-left: 3px solid var(--sky);
+  }
+
+  .question-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .question-list li {
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--navy);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+
+  .question-list li:hover { background: var(--grey-1); }
+
+  .q-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sky);
+    flex-shrink: 0;
+    margin-top: 9px;
+  }
+
+  /* ── TASK CARD ── */
+  .task-card {
+    background: linear-gradient(135deg, #eef2ff 0%, #e8effc 100%);
+    border: 1.5px solid rgba(74,124,201,0.25);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .task-card-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--sky);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .task-card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 19px;
+    color: var(--navy);
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+
+  .task-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .task-bullets li {
+    display: flex;
+    gap: 10px;
+    font-size: 14px;
+    color: #2a3a5c;
+    line-height: 1.4;
+  }
+
+  .task-dash {
+    color: var(--sky);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .task-time-note {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--grey-3);
+    border-top: 1px solid rgba(74,124,201,0.2);
+    padding-top: 12px;
+    margin-top: 4px;
+  }
+
+  /* ── SCORING TABLE ── */
+  .scoring-section {
+    margin-top: 40px;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--blue);
+  }
+
+  .scoring-header {
+    background: var(--navy);
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .scoring-title {
+    color: #fff;
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+  }
+
+  .scoring-total-display {
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    padding: 6px 18px;
+    border-radius: 8px;
+    letter-spacing: -0.02em;
+    transition: all 0.3s;
+  }
+
+  .score-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .score-table thead tr {
+    background: rgba(46,74,139,0.06);
+  }
+
+  .score-table th {
+    padding: 12px 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--grey-3);
+    text-align: left;
+    border-bottom: 1px solid var(--grey-2);
+  }
+
+  .score-table th:not(:first-child) { text-align: center; }
+
+  .score-table td {
+    padding: 6px 20px;
+    border-bottom: 1px solid var(--grey-1);
+    vertical-align: middle;
+  }
+
+  .score-table tr:last-of-type td { border-bottom: none; }
+
+  .criteria-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--navy);
+  }
+
+  .score-options {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  .score-radio { display: none; }
+
+  .score-label {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 2px solid var(--grey-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--grey-3);
+    background: var(--grey-1);
+    user-select: none;
+  }
+
+  .score-label:hover { border-color: var(--sky); color: var(--sky); background: #eef2ff; }
+
+  .score-radio:checked + .score-label {
+    border-color: transparent;
+    color: #fff;
+    transform: scale(1.05);
+  }
+
+  .score-radio[value="1"]:checked + .score-label { background: #e05050; }
+  .score-radio[value="2"]:checked + .score-label { background: #e8a030; }
+  .score-radio[value="3"]:checked + .score-label { background: #3aaa6c; }
+
+  .comment-cell {
+    width: 35%;
+  }
+
+  .comment-input {
+    width: 100%;
+    border: 1px solid var(--grey-2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--navy);
+    resize: none;
+    outline: none;
+    background: var(--grey-1);
+    transition: border-color 0.2s, background 0.2s;
+    min-height: 38px;
+    height: 38px;
+  }
+  .comment-input:focus { border-color: var(--sky); background: #fff; }
+
+  /* ── TOTAL + OVERALL ── */
+  .scoring-footer {
+    background: rgba(46,74,139,0.04);
+    border-top: 2px solid var(--grey-2);
+    padding: 20px 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 32px;
+  }
+
+  .total-box {
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  .total-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--grey-3);
+    margin-bottom: 6px;
+  }
+
+  .total-score {
+    font-family: 'DM Serif Display', serif;
+    font-size: 40px;
+    color: var(--navy);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    transition: all 0.3s;
+  }
+
+  .total-denom {
+    font-size: 18px;
+    color: var(--grey-3);
+  }
+
+  .overall-box { flex: 1; }
+
+  .overall-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--grey-3);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .overall-input {
+    width: 100%;
+    border: 1px solid var(--grey-2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--navy);
+    resize: none;
+    outline: none;
+    background: #fff;
+    transition: border-color 0.2s;
+    min-height: 80px;
+  }
+  .overall-input:focus { border-color: var(--sky); }
+
+  /* ── GRADE BADGE ── */
+  .grade-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-left: 12px;
+    transition: all 0.3s;
+  }
+  .grade-a { background: #d4edda; color: #155724; }
+  .grade-b { background: #fff3cd; color: #856404; }
+  .grade-c { background: #f8d7da; color: #721c24; }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: #fff; }
+    header, .sidebar { display: none; }
+    .app-body { display: block; }
+    .content { background: #fff; }
+    .topic-panel { display: block !important; page-break-after: always; padding: 20px; }
+    .btn { display: none; }
+    .score-label { border: 1px solid #ccc; }
+    .score-radio:checked + .score-label { outline: 3px solid #333; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-badge">GEP8</span>
+    <span class="logo-title">IELTS Speaking Test — Marker</span>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-ghost" onclick="window.print()">🖨 Print All</button>
+    <button class="btn btn-gold" onclick="exportScores()">⬇ Export Scores</button>
+  </div>
+</header>
+
+<div class="app-body">
+
+  <div class="sidebar">
+    <div class="sidebar-label">Topics</div>
+    <button class="topic-btn active" onclick="showTopic(1, this)">
+      <span class="topic-num">1</span>
+      <span class="topic-name">Lifestyle &amp; Work</span>
+    </button>
+    <button class="topic-btn" onclick="showTopic(2, this)">
+      <span class="topic-num">2</span>
+      <span class="topic-name">Technology &amp; Environment</span>
+    </button>
+    <button class="topic-btn" onclick="showTopic(3, this)">
+      <span class="topic-num">3</span>
+      <span class="topic-name">Architecture &amp; Design</span>
+    </button>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="student-section">
+      <span class="student-label">Student Name</span>
+      <input class="student-input" type="text" id="globalStudent" placeholder="Enter student name…" oninput="syncStudentName(this.value)">
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ───── TOPIC 1 ───── -->
+    <div class="topic-panel active" id="panel-1">
+      <div class="topic-header">
+        <div>
+          <div class="topic-eyebrow">Topic 1 · B1 Level</div>
+          <div class="topic-heading">Lifestyle &amp; Work</div>
+        </div>
+        <div class="date-input-wrap">
+          <span class="date-label">Date</span>
+          <input class="date-input" type="date" id="date-1">
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-block-header">
+          <span class="part-badge">Part 1</span>
+          <span class="section-block-title">Introduction &amp; Interview — 4–5 minutes</span>
+        </div>
+        <div class="section-block-body">
+          <div class="instruction">The teacher will ask you general questions. Try to answer in 2–3 sentences.</div>
+          <ul class="question-list">
+            <li><span class="q-dot"></span>What would you do if you didn't have to work? How would you spend your time?</li>
+            <li><span class="q-dot"></span>If you could buy a house anywhere in the world, where would you choose? Why?</li>
+            <li><span class="q-dot"></span>If you could change one thing about your lifestyle, what would you change?</li>
+            <li><span class="q-dot"></span>If you could choose any job, which would you choose and why?</li>
+            <li><span class="q-dot"></span>Do you think a good work–life balance is important? How do you try to achieve it?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-block-header">
+          <span class="part-badge">Part 2</span>
+          <span class="section-block-title">Individual Long Turn — 3–4 minutes</span>
+        </div>
+        <div class="section-block-body">
+          <div class="instruction">You have 1 minute to prepare, then speak for 1–2 minutes.</div>
+          <div class="task-card">
+            <div class="task-card-label">Task Card</div>
+            <div class="task-card-title">Talk about your ideal lifestyle.</div>
+            <ul class="task-bullets">
+              <li><span class="task-dash">–</span> Where you would live and what kind of home you would have</li>
+              <li><span class="task-dash">–</span> What your typical day would look like</li>
+              <li><span class="task-dash">–</span> How much time you would spend working and relaxing</li>
+              <li><span class="task-dash">–</span> Why this lifestyle would make you happy</li>
+            </ul>
+            <div class="task-time-note">You have 1 minute to get ready. Then speak for 1–2 minutes.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-block-header">
+          <span class="part-badge">Part 3</span>
+          <span class="section-block-title">Two-Way Discussion — 4–5 minutes</span>
+        </div>
+        <div class="section-block-body">
+          <div class="instruction">The teacher will ask bigger questions. Give longer answers with reasons and examples.</div>
+          <ul class="question-list">
+            <li><span class="q-dot"></span>Do you agree that we should have more small shops and fewer shopping centres and supermarkets? Why?</li>
+            <li><span class="q-dot"></span>How has the idea of work–life balance changed over the last 20 years?</li>
+            <li><span class="q-dot"></span>Do you think people today place too much importance on money and career? Why?</li>
+            <li><span class="q-dot"></span>What do you think governments could do to help people have a better work–life balance?</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SCORING -->
+      <div class="scoring-section">
+        <div class="scoring-header">
+          <span class="scoring-title">Speaking Assessment</span>
+          <div>
+            <span id="grade-1" class="grade-badge"></span>
+            <span class="scoring-total-display" id="display-total-1">0 / 15</span>
+          </div>
+        </div>
+        <table class="score-table">
+          <thead>
+            <tr>
+              <th>Criteria</th>
+              <th>1 – Needs Work</th>
+              <th>2 – Good</th>
+              <th>3 – Excellent</th>
+              <th class="comment-cell">Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="criteria-name">Communication</span></td>
+              <td><div class="score-options"><input class="score-radio" type="radio" name="t1-comm" id="t1-comm-1" value="1"><label class="score-label" for="t1-comm-1">1</label><input class="score-radio" type="radio" name="t1-comm" id="t1-comm-2" value="2"><label class="score-label" for="t1-comm-2">2</label></div></td>
+              <td><div class="score-options"></div></td>
+              <td><div class="score-options"><input class="score-radio" type="radio" name="t1-comm" id="t1-comm-3" value="3"><label class="score-label" for="t1-comm-3">3</label></div></td>
+              <td><textarea class="comment-input" placeholder="Notes…"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- rebuild properly below -->
+      </div>
+    </div>
+
+    <!-- ───── TOPIC 2 ───── -->
+    <div class="topic-panel" id="panel-2">
+      <div class="topic-header">
+        <div>
+          <div class="topic-eyebrow">Topic 2 · B1 Level</div>
+          <div class="topic-heading">Technology &amp; the Environment</div>
+        </div>
+        <div class="date-input-wrap">
+          <span class="date-label">Date</span>
+          <input class="date-input" type="date" id="date-2">
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-block-header">
+          <span class="part-badge">Part 1</span>
+          <span class="section-block-title">Introduction &amp; Interview — 4–5 minutes</span>
+        </div>
+        <div class="section-block-body">
+          <div class="instruction">The teacher will ask you general questions. Try to answer in 2–3 sentences.</div>
+          <ul class="question-list">
+            <li><span class="q-dot"></span>What are some advantages of not having a mobile phone? Could you live without one?</li>
+            <li><span class="q-dot"></span>What do you personally do to help protect the environment?</li>
+            <li><span class="q-dot"></span>What do you think is the most useful invention of the last 50 years? Why?</li>
+            <li><span class="q-dot"></span>Do you believe some people are luckier than others, or do we make our own luck?</li>
+            <li><span class="q-dot"></span>How do you feel when you receive too much information at once? How do you deal with it?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-block-header">
+          <span class="part-badge">Part 2</span>
+          <span class="section-block-title">Individual Long Turn — 3–4 minutes</span>
+        </div>
+        <div class="section-block-body">
+          <div class="instruction">You have 1 minute to prepare, then speak for 1–2 minutes.</div>
+          <div class="task-card">
+            <div class="task-card-label">Task Card</div>
+            <div class="task-card-title">Talk about a piece of technology that has changed your life.</div>
+            <ul class="task-bullets">
+              <li><span class="task-dash">–</span> What the technology is and when you started using it</li>
+              <li><span class="task-dash">–</span> How it has changed the way you work or live</li>
+              <li><span class="task-dash">–</span> Whether the changes have been mostly positive or negative</li>
+              <li><span class="task-dash">–</span> How life would be different without it</li>
+            </ul>
+            <div class="task-time-note">You have 1 minute to get ready. Then speak for 1–2 minutes.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-block-header">
+          <span class="part-badge">Part 3</span>
+          <span class="section-block-title">Two-Way Discussion — 4–5 minutes</span>
+        </div>
+        <div class="section-block-body">
+          <div class="instruction">The teacher will ask bigger questions. Give longer answers with reasons and examples.</div>
+          <ul class="question-list">
+            <li><span class="q-dot"></span>Do you agree that you should always help a stranger? Why or why not?</li>
+            <li><span class="q-dot"></span>Is information overload a serious problem in modern life? What can people do about it?</li>
+            <li><span class="q-dot"></span>How can technology help or harm the environment? Can you give examples of both?</li>
+            <li><span class="q-dot"></span>Do you think people will become more or less dependent on technology in the future? Why?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="scoring-section" id="scoring-2"><!-- rendered by JS --></div>
+    </div>
+
+    <!-- ───── TOPIC 3 ───── -->
+    <div class="topic-panel" id="panel-3">
+      <div class="topic-header">
+        <div>
+          <div class="topic-eyebrow">Topic 3 · B1 Level</div>
+          <div class="topic-heading">Architecture &amp; Design</div>
+        </div>
+        <div class="date-input-wrap">
+          <span class="date-label">Date</span>
+          <input class="date-input" type="date" id="date-3">
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-block-header">
+          <span class="part-badge">Part 1</span>
+          <span class="section-block-title">Introduction &amp; Interview — 4–5 minutes</span>
+        </div>
+        <div class="section-block-body">
+          <div class="instruction">The teacher will ask you general questions. Try to answer in 2–3 sentences.</div>
+          <ul class="question-list">
+            <li><span class="q-dot"></span>What is a famous building that you really like? What makes it special?</li>
+            <li><span class="q-dot"></span>Are there any types of modern design that you dislike? Why?</li>
+            <li><span class="q-dot"></span>Can you describe an advertisement that you think is very clever?</li>
+            <li><span class="q-dot"></span>Has your wallet or bag ever been stolen? What happened?</li>
+            <li><span class="q-dot"></span>Do you like watching detective series or films? Why or why not?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-block-header">
+          <span class="part-badge">Part 2</span>
+          <span class="section-block-title">Individual Long Turn — 3–4 minutes</span>
+        </div>
+        <div class="section-block-body">
+          <div class="instruction">You have 1 minute to prepare, then speak for 1–2 minutes.</div>
+          <div class="task-card">
+            <div class="task-card-label">Task Card</div>
+            <div class="task-card-title">Talk about a building or place that you find beautiful or interesting.</div>
+            <ul class="task-bullets">
+              <li><span class="task-dash">–</span> What the building or place is and where it is</li>
+              <li><span class="task-dash">–</span> How you first came to know about it</li>
+              <li><span class="task-dash">–</span> What makes it special or unique in your opinion</li>
+              <li><span class="task-dash">–</span> Whether you think modern buildings are as beautiful as older ones</li>
+            </ul>
+            <div class="task-time-note">You have 1 minute to get ready. Then speak for 1–2 minutes.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-block-header">
+          <span class="part-badge">Part 3</span>
+          <span class="section-block-title">Two-Way Discussion — 4–5 minutes</span>
+        </div>
+        <div class="section-block-body">
+          <div class="instruction">The teacher will ask bigger questions. Give longer answers with reasons and examples.</div>
+          <ul class="question-list">
+            <li><span class="q-dot"></span>Do you agree that architecture was much more beautiful a hundred years ago? Why?</li>
+            <li><span class="q-dot"></span>Do you think designers should always look to the future rather than the past? Why?</li>
+            <li><span class="q-dot"></span>How important is it for a city to preserve its old buildings and architecture?</li>
+            <li><span class="q-dot"></span>How do you think the buildings we live and work in affect our wellbeing and happiness?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="scoring-section" id="scoring-3"><!-- rendered by JS --></div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /app-body -->
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────
+const CRITERIA = ['Communication', 'Fluency & Coherence', 'Grammar', 'Vocabulary', 'Pronunciation'];
+const TOPICS = [1, 2, 3];
+
+// ── RENDER SCORING TABLES ─────────────────────────────────────────
+function buildScoringTable(topicNum) {
+  const wrap = document.getElementById(`scoring-${topicNum}`);
+  if (!wrap) return;
+
+  let rows = '';
+  CRITERIA.forEach((c, i) => {
+    const key = `t${topicNum}-${i}`;
+    rows += `<tr>
+      <td><span class="criteria-name">${c}</span></td>
+      <td>
+        <div class="score-options">
+          <input class="score-radio" type="radio" name="${key}" id="${key}-1" value="1" onchange="updateTotal(${topicNum})">
+          <label class="score-label" for="${key}-1">1</label>
+        </div>
+      </td>
+      <td>
+        <div class="score-options">
+          <input class="score-radio" type="radio" name="${key}" id="${key}-2" value="2" onchange="updateTotal(${topicNum})">
+          <label class="score-label" for="${key}-2">2</label>
+        </div>
+      </td>
+      <td>
+        <div class="score-options">
+          <input class="score-radio" type="radio" name="${key}" id="${key}-3" value="3" onchange="updateTotal(${topicNum})">
+          <label class="score-label" for="${key}-3">3</label>
+        </div>
+      </td>
+      <td><textarea class="comment-input" placeholder="Notes…"></textarea></td>
+    </tr>`;
+  });
+
+  wrap.innerHTML = `
+    <div class="scoring-header">
+      <span class="scoring-title">Speaking Assessment</span>
+      <div>
+        <span id="grade-${topicNum}" class="grade-badge"></span>
+        <span class="scoring-total-display" id="display-total-${topicNum}">0 / 15</span>
+      </div>
+    </div>
+    <table class="score-table">
+      <thead>
+        <tr>
+          <th>Criteria</th>
+          <th>1 – Needs Work</th>
+          <th>2 – Good</th>
+          <th>3 – Excellent</th>
+          <th class="comment-cell">Comments</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="scoring-footer">
+      <div class="total-box">
+        <div class="total-label">Total Score</div>
+        <div class="total-score" id="total-${topicNum}">0<span class="total-denom"> / 15</span></div>
+      </div>
+      <div class="overall-box">
+        <span class="overall-label">Overall Comments</span>
+        <textarea class="overall-input" placeholder="Write overall feedback for the student here…"></textarea>
+      </div>
+    </div>`;
+}
+
+// Fix topic 1 scoring (was partly hardcoded — rebuild cleanly)
+function buildTopic1Scoring() {
+  const existing = document.querySelector('#panel-1 .scoring-section');
+  if (!existing) return;
+  existing.id = 'scoring-1';
+  buildScoringTable(1);
+  existing.removeAttribute('id'); // already was set by buildScoringTable
+}
+
+// ── TOTAL CALC ────────────────────────────────────────────────────
+function updateTotal(topicNum) {
+  let total = 0;
+  CRITERIA.forEach((_, i) => {
+    const key = `t${topicNum}-${i}`;
+    const checked = document.querySelector(`input[name="${key}"]:checked`);
+    if (checked) total += parseInt(checked.value);
+  });
+
+  const displayEl = document.getElementById(`display-total-${topicNum}`);
+  const totalEl = document.getElementById(`total-${topicNum}`);
+  const gradeEl = document.getElementById(`grade-${topicNum}`);
+
+  if (displayEl) displayEl.textContent = `${total} / 15`;
+  if (totalEl) totalEl.innerHTML = `${total}<span class="total-denom"> / 15</span>`;
+
+  if (gradeEl) {
+    gradeEl.className = 'grade-badge';
+    if (total === 0) { gradeEl.textContent = ''; return; }
+    if (total >= 13) { gradeEl.textContent = 'Excellent'; gradeEl.classList.add('grade-a'); }
+    else if (total >= 9) { gradeEl.textContent = 'Good'; gradeEl.classList.add('grade-b'); }
+    else { gradeEl.textContent = 'Needs Work'; gradeEl.classList.add('grade-c'); }
+  }
+}
+
+// ── NAV ───────────────────────────────────────────────────────────
+function showTopic(num, btn) {
+  document.querySelectorAll('.topic-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`panel-${num}`).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── STUDENT NAME SYNC ─────────────────────────────────────────────
+function syncStudentName(val) {
+  // Could be used for export
+}
+
+// ── EXPORT ────────────────────────────────────────────────────────
+function exportScores() {
+  const studentName = document.getElementById('globalStudent').value || 'Student';
+  let csv = `GEP8 IELTS Speaking Test Results\nStudent: ${studentName}\n\n`;
+
+  [1, 2, 3].forEach(t => {
+    const topicNames = ['', 'Lifestyle & Work', 'Technology & the Environment', 'Architecture & Design'];
+    const dateEl = document.getElementById(`date-${t}`);
+    csv += `Topic ${t}: ${topicNames[t]}\n`;
+    if (dateEl) csv += `Date: ${dateEl.value || '—'}\n`;
+    csv += `Criteria,Score\n`;
+    let total = 0;
+    CRITERIA.forEach((c, i) => {
+      const key = `t${t}-${i}`;
+      const checked = document.querySelector(`input[name="${key}"]:checked`);
+      const val = checked ? checked.value : '—';
+      if (checked) total += parseInt(val);
+      csv += `${c},${val}\n`;
+    });
+    csv += `TOTAL,${total}/15\n\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${studentName.replace(/\s+/g, '_')}_GEP8_Scores.csv`;
+  a.click();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Set today's date for all date inputs
+  const today = new Date().toISOString().split('T')[0];
+  [1,2,3].forEach(n => {
+    const d = document.getElementById(`date-${n}`);
+    if (d) d.value = today;
+  });
+
+  // Build scoring tables for topics 2 & 3
+  buildScoringTable(2);
+  buildScoringTable(3);
+
+  // Rebuild topic 1 scoring properly
+  const s1 = document.querySelector('#panel-1 .scoring-section');
+  if (s1) {
+    s1.id = 'scoring-1-temp';
+    const new1 = document.createElement('div');
+    new1.className = 'scoring-section';
+    new1.id = 'scoring-1';
+    s1.replaceWith(new1);
+    buildScoringTable(1);
+  }
+
+  // Wire up change events for topic 1 radios (already in DOM)
+  document.querySelectorAll('#panel-1 .score-radio').forEach(r => {
+    r.addEventListener('change', () => updateTotal(1));
+  });
+});
+</script>
+</body>
+</html>
