@@ -207,14 +207,14 @@ header{background:var(--navy);padding:13px 26px;display:flex;align-items:center;
   <div class="save-left">
     <span style="font-size:20px;">💾</span>
     <div class="save-info">
-      <strong>Saving your work:</strong> Click <strong>Save Progress</strong> after marking — it downloads a file.
-      Next session, click <strong>Load Progress</strong> to restore everything instantly.
+      <strong>Auto-saving:</strong> Your work is saved automatically in this browser. Just come back to this page and everything will be here.
     </div>
   </div>
   <div class="save-right">
     <span id="status" class="status-text"></span>
-    <button class="btn btn-sky" onclick="saveProgress()">💾 Save Progress</button>
-    <button class="btn btn-green" onclick="document.getElementById('fload').click()">📂 Load Progress</button>
+    <button class="btn btn-sky" onclick="exportAllCSV()">⬇ Export CSV</button>
+    <button class="btn btn-ghost" onclick="exportBackup()">📦 Backup</button>
+    <button class="btn btn-green" onclick="document.getElementById('fload').click()">📂 Restore Backup</button>
     <input type="file" id="fload" accept=".gep8,.json" style="display:none" onchange="loadProgress(event)">
   </div>
 </div>
@@ -237,10 +237,10 @@ header{background:var(--navy);padding:13px 26px;display:flex;align-items:center;
     <div class="empty-state" id="empty">
       <div class="ei">👩‍🏫</div>
       <div class="et">Welcome to GEP8 Marker</div>
-      <div class="es">Add your students to get started, or load a previously saved progress file to continue where you left off.</div>
+      <div class="es">Add your students to get started. Your work will be saved automatically in this browser.</div>
       <div class="ea">
         <button class="btn btn-gold" style="font-size:14px;padding:10px 20px;" onclick="openModal()">＋ Add Students</button>
-        <button class="btn btn-green" style="font-size:14px;padding:10px 20px;" onclick="document.getElementById('fload').click()">📂 Load Progress</button>
+        <button class="btn btn-ghost" style="font-size:14px;padding:10px 20px;" onclick="document.getElementById('fload').click()">📂 Restore Backup</button>
       </div>
     </div>
     <div class="ovpanel" id="ovpanel"></div>
@@ -290,20 +290,16 @@ const gs=id=>students.find(s=>s.id===id);
 const tt=(s,t)=>!s.scores||!s.scores[t]?0:Object.values(s.scores[t]).reduce((a,b)=>a+(parseInt(b)||0),0);
 const at=s=>[0,1,2].reduce((a,t)=>a+tt(s,t),0);
 
+const LS_KEY='gep8_progress';
+
 function setStatus(u){
   unsaved=u;
-  g('status').innerHTML=u?'<span class="dot dot-amber"></span>Unsaved changes':'<span class="dot dot-green"></span>Saved';
+  g('status').innerHTML=u?'<span class="dot dot-amber"></span>Saving…':'<span class="dot dot-green"></span>Saved';
+  if(u) clearTimeout(window._saveTimer),window._saveTimer=setTimeout(persistToLS,600);
 }
 
-function toast(msg,type='ok'){
-  const el=g('toast');el.textContent=msg;el.className=`toast ${type} show`;
-  setTimeout(()=>el.classList.remove('show'),3000);
-}
-
-/* ── SAVE / LOAD ── */
-function saveProgress(){
-  if(!students.length){toast('No students to save yet.','warn');return;}
-  // Flush DOM to state
+function persistToLS(){
+  // Flush DOM → state first
   students.forEach(s=>[0,1,2].forEach(t=>{
     const de=g(`date-${s.id}-${t}`);if(de){if(!s.date)s.date={};s.date[t]=de.value;}
     CRITERIA.forEach((_,c)=>{
@@ -311,13 +307,37 @@ function saveProgress(){
     });
     const oe=g(`ov-${s.id}-${t}`);if(oe){if(!s.overall)s.overall={};s.overall[t]=oe.value;}
   }));
-  const blob=new Blob([JSON.stringify({v:1,students},null,2)],{type:'application/json'});
+  try{localStorage.setItem(LS_KEY,JSON.stringify({v:1,students}));}catch(e){console.warn('localStorage save failed',e);}
+  unsaved=false;
+  g('status').innerHTML='<span class="dot dot-green"></span>Saved';
+}
+
+function loadFromLS(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);if(!raw)return false;
+    const d=JSON.parse(raw);if(!d.students||!d.students.length)return false;
+    d.students.forEach(s=>{students.push(s);buildPanel(s);});
+    renderSB();g('empty').style.display='none';
+    selectStudent(students[0].id);
+    setStatus(false);
+    return true;
+  }catch(e){return false;}
+}
+
+function toast(msg,type='ok'){
+  const el=g('toast');el.textContent=msg;el.className=`toast ${type} show`;
+  setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+/* ── BACKUP / RESTORE (optional file-based) ── */
+function exportBackup(){
+  persistToLS();
+  const data=localStorage.getItem(LS_KEY)||JSON.stringify({v:1,students});
   const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=`GEP8_${new Date().toISOString().slice(0,10)}.gep8`;
+  a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));
+  a.download=`GEP8_backup_${new Date().toISOString().slice(0,10)}.gep8`;
   a.click();
-  setStatus(false);
-  toast('✅ Saved! Keep the .gep8 file somewhere safe.');
+  toast('✅ Backup downloaded!');
 }
 
 function loadProgress(evt){
@@ -331,9 +351,9 @@ function loadProgress(evt){
       d.students.forEach(s=>{students.push(s);buildPanel(s);});
       renderSB();g('empty').style.display='none';
       if(students.length)selectStudent(students[0].id);
-      setStatus(false);
-      toast(`✅ Loaded ${students.length} student${students.length>1?'s':''}!`);
-    }catch{toast('❌ Could not read file. Please use a .gep8 file.','warn');}
+      persistToLS();setStatus(false);
+      toast(`✅ Restored ${students.length} student${students.length>1?'s':''}!`);
+    }catch{toast('❌ Could not read file. Please use a .gep8 backup file.','warn');}
   };
   r.readAsText(file);evt.target.value='';
 }
@@ -516,8 +536,8 @@ function saveStudents(){
     students=students.slice(0,names.length);
   }
   renderSB();closeModal();g('empty').style.display='none';
-  selectStudent(students[0].id);setStatus(true);
-  toast(`✅ ${students.length} student${students.length>1?'s':''} saved!`);
+  selectStudent(students[0].id);persistToLS();setStatus(false);
+  toast(`✅ ${students.length} student${students.length>1?'s':''} ready!`);
 }
 
 /* ── EXPORT ── */
@@ -546,7 +566,8 @@ function dl(content,name){
 
 /* ── INIT ── */
 g('modal').addEventListener('click',e=>{if(e.target===g('modal'))closeModal();});
-renderSB();
+if(!loadFromLS()) renderSB();
+setStatus(false);
 </script>
 </body>
 </html>
