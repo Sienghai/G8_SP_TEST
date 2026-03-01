@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GEP8 Speaking Test — Class Marker</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
 <style>
 :root {
   --navy:#1a2744;--blue:#2e4a8b;--sky:#4a7cc9;--gold:#c9943a;--gold-light:#f0c97a;
@@ -207,14 +208,15 @@ header{background:var(--navy);padding:13px 26px;display:flex;align-items:center;
   <div class="save-left">
     <span style="font-size:20px;">💾</span>
     <div class="save-info">
-      <strong>Using another device?</strong> Click <strong>📦 Save to File</strong> on this device, then <strong>📂 Load File</strong> on the other device to transfer your data.
+      <strong>Auto-saving:</strong> Your work is saved in this browser. Use <strong>🔗 Copy Share Link</strong> to open your data in any browser or device.
     </div>
   </div>
   <div class="save-right">
     <span id="status" class="status-text"></span>
     <button class="btn btn-sky" onclick="exportAllCSV()">⬇ Export CSV</button>
-    <button class="btn btn-gold" onclick="exportBackup()" title="Save all scores to a file you can load on any device">📦 Save to File</button>
-    <button class="btn btn-green" onclick="document.getElementById('fload').click()" title="Load a previously saved file">📂 Load File</button>
+    <button class="btn btn-ghost" onclick="exportBackup()">📦 Backup</button>
+    <button class="btn btn-green" onclick="document.getElementById('fload').click()">📂 Restore Backup</button>
+    <button class="btn" style="background:var(--gold);color:var(--navy);font-weight:600;" onclick="copyShareLink()">🔗 Copy Share Link</button>
     <input type="file" id="fload" accept=".gep8,.json" style="display:none" onchange="loadProgress(event)">
   </div>
 </div>
@@ -237,10 +239,10 @@ header{background:var(--navy);padding:13px 26px;display:flex;align-items:center;
     <div class="empty-state" id="empty">
       <div class="ei">👩‍🏫</div>
       <div class="et">Welcome to GEP8 Marker</div>
-      <div class="es">Add your students to get started. Use <strong>📦 Save to File</strong> to download your data and <strong>📂 Load File</strong> to open it on any device.</div>
+      <div class="es">Add your students to get started. Your work will be saved automatically in this browser.</div>
       <div class="ea">
         <button class="btn btn-gold" style="font-size:14px;padding:10px 20px;" onclick="openModal()">＋ Add Students</button>
-        <button class="btn btn-green" style="font-size:14px;padding:10px 20px;" onclick="document.getElementById('fload').click()">📂 Load File</button>
+        <button class="btn btn-ghost" style="font-size:14px;padding:10px 20px;" onclick="document.getElementById('fload').click()">📂 Restore Backup</button>
       </div>
     </div>
     <div class="ovpanel" id="ovpanel"></div>
@@ -337,7 +339,7 @@ function exportBackup(){
   a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));
   a.download=`GEP8_backup_${new Date().toISOString().slice(0,10)}.gep8`;
   a.click();
-  toast('✅ File saved! Load it on any device with 📂 Load File.');
+  toast('✅ Backup downloaded!');
 }
 
 function loadProgress(evt){
@@ -358,7 +360,39 @@ function loadProgress(evt){
   r.readAsText(file);evt.target.value='';
 }
 
-/* ── SIDEBAR ── */
+/* ── SHARE LINK ── */
+function copyShareLink(){
+  persistToLS();
+  const data=JSON.stringify({v:1,students});
+  const compressed=LZString.compressToEncodedURIComponent(data);
+  const url=window.location.href.split('?')[0].split('#')[0]+'?d='+compressed;
+  navigator.clipboard.writeText(url).then(()=>{
+    toast('✅ Share link copied! Paste it in any browser to load your data.');
+  }).catch(()=>{
+    // Fallback: prompt with URL
+    prompt('Copy this link and open it in any browser:',url);
+  });
+}
+
+function loadFromURL(){
+  try{
+    const params=new URLSearchParams(window.location.search);
+    const d=params.get('d');if(!d)return false;
+    const raw=LZString.decompressFromEncodedURIComponent(d);
+    if(!raw)return false;
+    const data=JSON.parse(raw);
+    if(!data.students||!data.students.length)return false;
+    data.students.forEach(s=>{students.push(s);buildPanel(s);});
+    renderSB();g('empty').style.display='none';
+    selectStudent(students[0].id);
+    persistToLS(); // save to localStorage for this browser too
+    setStatus(false);
+    // Clean URL so refreshing doesn't re-import
+    window.history.replaceState({},'',window.location.pathname);
+    toast('✅ Loaded data from shared link!');
+    return true;
+  }catch(e){return false;}
+}
 function renderSB(){
   g('scount').textContent=`${students.length} / 25`;
   const list=g('slist');list.innerHTML='';
@@ -566,7 +600,7 @@ function dl(content,name){
 
 /* ── INIT ── */
 g('modal').addEventListener('click',e=>{if(e.target===g('modal'))closeModal();});
-if(!loadFromLS()) renderSB();
+if(!loadFromURL() && !loadFromLS()) renderSB();
 setStatus(false);
 </script>
 </body>
