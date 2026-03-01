@@ -207,14 +207,14 @@ header{background:var(--navy);padding:13px 26px;display:flex;align-items:center;
   <div class="save-left">
     <span style="font-size:20px;">💾</span>
     <div class="save-info">
-      <strong>Auto-saving:</strong> Your work is saved automatically in this browser. Just come back to this page and everything will be here.
+      <strong>Using another device?</strong> Click <strong>📦 Save to File</strong> on this device, then <strong>📂 Load File</strong> on the other device to transfer your data.
     </div>
   </div>
   <div class="save-right">
     <span id="status" class="status-text"></span>
     <button class="btn btn-sky" onclick="exportAllCSV()">⬇ Export CSV</button>
-    <button class="btn btn-ghost" onclick="exportBackup()">📦 Backup</button>
-    <button class="btn btn-green" onclick="document.getElementById('fload').click()">📂 Restore Backup</button>
+    <button class="btn btn-gold" onclick="exportBackup()" title="Save all scores to a file you can load on any device">📦 Save to File</button>
+    <button class="btn btn-green" onclick="document.getElementById('fload').click()" title="Load a previously saved file">📂 Load File</button>
     <input type="file" id="fload" accept=".gep8,.json" style="display:none" onchange="loadProgress(event)">
   </div>
 </div>
@@ -237,10 +237,10 @@ header{background:var(--navy);padding:13px 26px;display:flex;align-items:center;
     <div class="empty-state" id="empty">
       <div class="ei">👩‍🏫</div>
       <div class="et">Welcome to GEP8 Marker</div>
-      <div class="es">Add your students to get started. Your work will be saved automatically in this browser.</div>
+      <div class="es">Add your students to get started. Use <strong>📦 Save to File</strong> to download your data and <strong>📂 Load File</strong> to open it on any device.</div>
       <div class="ea">
         <button class="btn btn-gold" style="font-size:14px;padding:10px 20px;" onclick="openModal()">＋ Add Students</button>
-        <button class="btn btn-ghost" style="font-size:14px;padding:10px 20px;" onclick="document.getElementById('fload').click()">📂 Restore Backup</button>
+        <button class="btn btn-green" style="font-size:14px;padding:10px 20px;" onclick="document.getElementById('fload').click()">📂 Load File</button>
       </div>
     </div>
     <div class="ovpanel" id="ovpanel"></div>
@@ -337,7 +337,7 @@ function exportBackup(){
   a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));
   a.download=`GEP8_backup_${new Date().toISOString().slice(0,10)}.gep8`;
   a.click();
-  toast('✅ Backup downloaded!');
+  toast('✅ File saved! Load it on any device with 📂 Load File.');
 }
 
 function loadProgress(evt){
